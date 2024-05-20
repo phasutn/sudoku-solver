@@ -1,46 +1,48 @@
 import numpy as np
 
 
-def placeable(grid, row, col, num):
-    if num in grid[row]:
-        return False
-    elif num in grid[:col]:
-        return False
-    # Check the corresponding 3x3 grid for the number
-    elif num in grid[(row // 3) * 3:((row // 3) + 1) * 3, (col // 3) * 3:((col // 3) + 1) * 3]:
-        return False
-    else:
-        return True
+class sudoku:
+    def __init__(self, board):
+        self.board = board
 
-
-def possible(grid, row, col):
-    buf = []
-    for num in range(1, 9):
-        if placeable(grid, row, col, num):
-            buf.append(num)
-    return buf
-
-
-def complete(grid):
-    # numpy.unique returns a sorted array of unique elements
-    # numpy.arange creates an array of specified number
-    # numpy.all does AND operation on the elements in the given array
-    for i in range(9):
-        if not np.all(np.unique(grid[i, :]) == np.arange(1, 10)):
+    def placeable(self, row, col, num):
+        if num in self.board[row]:
             return False
-        if not np.all(np.unique(grid[:, i]) == np.arange(1, 10)):
+        elif num in self.board[:col]:
             return False
-    #Check each 3x3 box for uniqueness
-    for row in range(0, 9, 3):
-        for col in range(0, 9, 3):
-            if not np.all(np.unique(grid[row:row + 3, col:col + 3]) == np.arange(1, 10)):
+        # Check the corresponding 3x3 grid for the number
+        elif num in self.board[(row // 3) * 3:((row // 3) + 1) * 3, (col // 3) * 3:((col // 3) + 1) * 3]:
+            return False
+        else:
+            return True
+
+    def possible(self, row, col):
+        buf = []
+        for num in range(1, 9):
+            if self.placeable(row, col, num):
+                buf.append(num)
+        return buf
+
+    def complete(self):
+        # numpy.unique returns a sorted array of unique elements
+        # numpy.arange creates an array of specified number
+        # numpy.all does AND operation on the elements in the given array
+        for i in range(9):
+            if not np.all(np.unique(self.board[i, :]) == np.arange(1, 10)):
                 return False
-    return True
+            if not np.all(np.unique(self.board[:, i]) == np.arange(1, 10)):
+                return False
+        # Check each 3x3 box for uniqueness
+        for row in range(0, 9, 3):
+            for col in range(0, 9, 3):
+                if not np.all(np.unique(self.board[row:row + 3, col:col + 3]) == np.arange(1, 10)):
+                    return False
+        return True
 
 
 def main():
     print("test")
-    grid = np.array([
+    board = np.array([
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 2, 1, 9, 5, 3, 4, 8],
         [0, 6, 8, 3, 4, 2, 5, 6, 7],
