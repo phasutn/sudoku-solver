@@ -12,7 +12,12 @@ def placeable(grid, row, col, num):
     else:
         return True
 
-
+def possible(grid, row, col):
+    list = []
+    for num in range(1,10):
+        if num not in grid[row, :] and num not in grid[:, col] and num not in grid[(row // 3) * 3:((row // 3) + 1) * 3, (col // 3) * 3:((col // 3) + 1) * 3]:
+            list.append(num)
+    return list
 def complete(grid):
     # numpy.unique returns a sorted array of unique elements
     # numpy.arange creates an array of specified number
@@ -32,29 +37,22 @@ def complete(grid):
 
 def main():
     print("test")
-    solved_sudoku = np.array([
-        [5, 3, 4, 6, 7, 8, 9, 1, 2],
-        [6, 7, 2, 1, 9, 5, 3, 4, 8],
-        [1, 9, 8, 3, 4, 2, 5, 6, 7],
-        [8, 5, 9, 7, 6, 1, 4, 2, 3],
-        [4, 2, 6, 8, 5, 3, 7, 9, 1],
-        [7, 1, 3, 9, 2, 4, 8, 5, 6],
-        [9, 6, 1, 5, 3, 7, 2, 8, 4],
-        [2, 8, 7, 4, 1, 9, 6, 3, 5],
-        [3, 4, 5, 2, 8, 6, 1, 7, 9]
+    grid = np.array([
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 1, 9, 5, 3, 4, 8],
+        [0, 6, 8, 3, 4, 2, 5, 6, 7],
+        [0, 5, 9, 7, 6, 1, 4, 2, 3],
+        [0, 2, 6, 8, 5, 3, 7, 9, 1],
+        [0, 1, 3, 9, 2, 4, 8, 5, 6],
+        [0, 6, 1, 5, 3, 7, 2, 8, 4],
+        [0, 6, 7, 4, 1, 9, 6, 3, 5],
+        [0, 4, 5, 2, 8, 6, 1, 7, 9]
     ])
-    unsolved_sudoku = np.array([
-        [2, 2, 2, 2, 2, 2, 2, 2, 2],
-        [0, 1, 2, 1, 9, 5, 3, 4, 8],
-        [1, 6, 8, 3, 4, 2, 5, 6, 7],
-        [2, 5, 9, 7, 6, 1, 4, 2, 3],
-        [2, 2, 6, 8, 5, 3, 7, 9, 1],
-        [7, 1, 3, 9, 2, 4, 8, 5, 6],
-        [2, 6, 1, 5, 3, 7, 2, 8, 4],
-        [3, 6, 7, 4, 1, 9, 6, 3, 5],
-        [2, 4, 5, 2, 8, 6, 1, 7, 9]
-    ])
-    print(complete(solved_sudoku))
+    # print(complete(grid))
+    # for i in range(9):
+    #     for j in range(9):
+    #         print('test')
+    print(possible(grid, 0, 0))
 
 
 if __name__ == "__main__":
