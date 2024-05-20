@@ -12,12 +12,15 @@ def placeable(grid, row, col, num):
     else:
         return True
 
+
 def possible(grid, row, col):
-    list = []
-    for num in range(1,10):
-        if num not in grid[row, :] and num not in grid[:, col] and num not in grid[(row // 3) * 3:((row // 3) + 1) * 3, (col // 3) * 3:((col // 3) + 1) * 3]:
-            list.append(num)
-    return list
+    buf = []
+    for num in range(1, 9):
+        if placeable(grid, row, col, num):
+            buf.append(num)
+    return buf
+
+
 def complete(grid):
     # numpy.unique returns a sorted array of unique elements
     # numpy.arange creates an array of specified number
@@ -48,11 +51,6 @@ def main():
         [0, 6, 7, 4, 1, 9, 6, 3, 5],
         [0, 4, 5, 2, 8, 6, 1, 7, 9]
     ])
-    # print(complete(grid))
-    # for i in range(9):
-    #     for j in range(9):
-    #         print('test')
-    print(possible(grid, 0, 0))
 
 
 if __name__ == "__main__":
