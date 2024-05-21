@@ -8,7 +8,7 @@ def all_possible_state(table):
                 for number in range(1, 5):
                     # row
                     if number not in table[i]:
-                        # colum
+                        # column
                         column_check = all(number != table[row][j] for row in range(len(table)))
                         if column_check:
                             # 2x2 grid
@@ -41,11 +41,16 @@ def solve(table):
     possible_state = all_possible_state(table)
     single_state(possible_state, table)
     while True:
-        while True:
-            cell = select_cell(possible_state)
-            if cell is None:
-                return table  
-    
+        cell = select_cell(possible_state)
+        if cell is None:
+            return table  # Solution found
+        for value in possible_state[cell[0]][cell[1]]:
+            # Try filling the cell with each possible value
+            table[cell[0]][cell[1]] = value
+            # Recursively try to solve the puzzlez
+            result = solve(table)
+        return result
+
 # Example usage:
 question = [
     [None, 3, 2, None],
@@ -55,8 +60,5 @@ question = [
 ]
 
 solution = solve(question)
-if solution:
-    for row in solution:
-        print(row)
-else:
-    print("No solution exists.")
+for row in solution:
+    print(row)
