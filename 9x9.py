@@ -1,5 +1,5 @@
 def all_possible_state(table):
-    possible_state = [[[] for i in range(9)] for i in range(9)]
+    possible_state = [[[] for _ in range(9)] for _ in range(9)]
     for i in range(len(table)):
         for j in range(len(table[i])):
             if table[i][j] != 0:
@@ -20,12 +20,15 @@ def all_possible_state(table):
     return possible_state
 
 def single_state(possible_state, table):
+    updated = False
     for row in range(len(possible_state)):
         for col in range(len(possible_state[row])):
             if possible_state[row][col] != 0:  
                 if len(possible_state[row][col]) == 1:
                     table[row][col] = possible_state[row][col][0]
                     possible_state[row][col] = 0
+                    updated = True
+    return updated
 
 def select_cell(possible_state):
     min_possibilities = float('inf')
@@ -39,29 +42,35 @@ def select_cell(possible_state):
 
 def solve(table):
     possible_state = all_possible_state(table)
-    single_state(possible_state, table)
+    
+    # Continuously update single states
+    while single_state(possible_state, table):
+        possible_state = all_possible_state(table)
+    
     cell = select_cell(possible_state)
     if cell is None:
-        return table  
+        return table  # Solution found
+    
     for value in possible_state[cell[0]][cell[1]]:
         new_table = [row[:] for row in table]
         new_table[cell[0]][cell[1]] = value
-       
         result = solve(new_table)
         if result:
             return result
-    return None  
+    
+    return None  # Backtrack
 
+# Example usage for a 9x9 grid:
 question = [
-        [0, 0, 0, 1, 0, 0, 9, 2, 0],
-        [0, 6, 0, 9, 0, 0, 8, 0, 0],
-        [0, 1, 8, 0, 0, 2, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 7, 0, 4],
-        [0, 9, 4, 0, 3, 0, 6, 8, 0],
-        [0, 8, 5, 0, 6, 0, 0, 1, 0],
-        [1, 0, 9, 7, 0, 0, 0, 0, 0],
-        [8, 7, 6, 0, 0, 0, 3, 4, 0],
-        [5, 0, 0, 3, 0, 0, 0, 0, 0]
+    [0, 1, 7, 8, 0, 0, 4, 0, 6],
+    [0, 0, 0, 4, 0, 7, 0, 0, 2],
+    [0, 0, 9, 0, 1, 0, 0, 7, 0],
+    [5, 8, 0, 0, 0, 0, 6, 0, 0],
+    [0, 0, 2, 0, 0, 0, 5, 0, 0],
+    [0, 0, 4, 0, 0, 0, 0, 8, 7],
+    [0, 9, 0, 0, 4, 0, 1, 0, 0],
+    [1, 0, 0, 3, 0, 6, 0, 0, 0],
+    [6, 0, 3, 0, 0, 9, 7, 2, 0]
 ]
 
 solution = solve(question)
