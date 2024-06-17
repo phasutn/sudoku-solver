@@ -1,3 +1,5 @@
+import time
+
 def all_possible_state(table):
     possible_state = [[[] for _ in range(9)] for _ in range(9)]
     for i in range(len(table)):
@@ -6,12 +8,9 @@ def all_possible_state(table):
                 possible_state[i][j] = 0
             else:
                 for number in range(1, 10):
-                    # Check row
                     if number not in table[i]:
-                        # Check column
                         column_check = all(number != table[row][j] for row in range(len(table)))
                         if column_check:
-                            # Check 3x3 grid
                             start_row = (i // 3) * 3
                             start_col = (j // 3) * 3
                             subgrid_check = all(number != table[row][col] for row in range(start_row, start_row + 3) for col in range(start_col, start_col + 3))
@@ -43,13 +42,12 @@ def select_cell(possible_state):
 def solve(table):
     possible_state = all_possible_state(table)
     
-    # Continuously update single states
     while single_state(possible_state, table):
         possible_state = all_possible_state(table)
     
     cell = select_cell(possible_state)
     if cell is None:
-        return table  # Solution found
+        return table
     
     for value in possible_state[cell[0]][cell[1]]:
         new_table = [row[:] for row in table]
@@ -58,24 +56,28 @@ def solve(table):
         if result:
             return result
     
-    return None  # Backtrack
+    return None
 
-# Example usage for a 9x9 grid:
 question = [
-    [0, 1, 7, 8, 0, 0, 4, 0, 6],
-    [0, 0, 0, 4, 0, 7, 0, 0, 2],
-    [0, 0, 9, 0, 1, 0, 0, 7, 0],
-    [5, 8, 0, 0, 0, 0, 6, 0, 0],
-    [0, 0, 2, 0, 0, 0, 5, 0, 0],
-    [0, 0, 4, 0, 0, 0, 0, 8, 7],
-    [0, 9, 0, 0, 4, 0, 1, 0, 0],
-    [1, 0, 0, 3, 0, 6, 0, 0, 0],
-    [6, 0, 3, 0, 0, 9, 7, 2, 0]
+    [5, 3, 0, 0, 7, 0, 0, 0, 0],
+    [6, 0, 0, 1, 9, 5, 0, 0, 0],
+    [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    [8, 0, 0, 0, 6, 0, 0, 0, 3],
+    [4, 0, 0, 8, 0, 3, 0, 0, 1],
+    [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 6, 0, 0, 0, 0, 2, 8, 0],
+    [0, 0, 0, 4, 1, 9, 0, 0, 5],
+    [0, 0, 0, 0, 8, 0, 0, 7, 9]
 ]
 
+
+start_time = time.time()
 solution = solve(question)
+end_time = time.time()
+
 if solution:
     for row in solution:
         print(row)
+    print(f"Runtime: {end_time - start_time:.4f} seconds")
 else:
     print("No solution found")
