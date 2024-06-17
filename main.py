@@ -1,14 +1,15 @@
 import numpy as np
-
+import time
 
 class sudoku:
     def __init__(self, board, row=0, col=0):
         self.board = board
         self.row = row
         self.col = col
-
+        self.solved = False
     def all_filled(self):
         return np.all(self.board != 0)
+
     def placeable(self, row, col, num):
         if num in self.board[row]:
             return False
@@ -22,16 +23,21 @@ class sudoku:
 
     def possible(self, row, col):
         buf = []
-        for num in range(1, 9):
+        for num in range(1, 10):
             if self.placeable(row, col, num):
                 buf.append(num)
-        return buf
+        if len(buf) > 0:
+            return buf
+        else:
+            return 0
 
     def complete(self):
         # numpy.unique returns a sorted array of unique elements
         # numpy.arange creates an array of specified number
         # numpy.all does AND operation on the elements in the given array
         for i in range(9):
+            # print(self.board[i, :])
+            # print(np.arange(1, 10))
             if not np.all(np.unique(self.board[i, :]) == np.arange(1, 10)):
                 return False
             if not np.all(np.unique(self.board[:, i]) == np.arange(1, 10)):
@@ -43,29 +49,40 @@ class sudoku:
                     return False
         return True
 
-    def solve(self, start_row=0, start_col=0):
-        # print(f"entering row:{start_row} col:{start_col}")
-        for row in range(start_row, 9):
-            for col in range(start_col, 9):
-                if self.board[row, col] == 0:
-                    pos = self.possible(row, col)
-                    print(f"possible values at {row}, {col} are {pos}")
-                    # print(f"check1 {self.board[row, :]}")
-                    # print(f"check2 {self.board[:, col]}")
-                    if not pos:
-                        return None
-                    for num in pos:
-                        new_board = np.copy(self.board)
-                        new_board[row, col] = num
-                        solved_board = sudoku(new_board).solve(row, col)
-                        if solved_board is not None:
-                            return solved_board  # Return the solution
+    def solve(self):
+        for row in range(9):
+            for col in range(9):
+                if self.board[row, col] != 0:
+                    continue
+                pos = self.possible(row, col)
+                if pos == 0:
+                    return None
+                # print(f"First line: {self.board[0, :]}, row:{row} col:{col}")
+                # print(pos)
+                # print(f"{self.board[row, :]}, row: {row}")
+                for num in pos:
+                    self.board[row, col] = num
+                    if self.solve() is None:
+                        self.board[row, col] = 0
+                    elif self.solved:
+                        return self.board
+                    # new = np.copy(self.board)s
+                    # new[row, col] = num
+                    # new_sudoku = sudoku(new)
+                    # result = new_sudoku.solve()
+                    # if result is not None:
+                    #     return result
+
         if self.all_filled() and self.complete():
             print("Solved")
+            self.solved = True
             return self.board
-        return None
+        print("hello dog")
+
 
 def main():
+    start = time.time()
+
     print("test")
     board = np.array([
         [5, 2, 0, 0, 0, 0, 0, 8, 1],
@@ -83,5 +100,7 @@ def main():
     ans = new_board.solve()
     print(ans)
 
+    end = time.time()
+    print("Execution time:", (end - start) * 10 ** 3, "ms")
 if __name__ == "__main__":
     main()
