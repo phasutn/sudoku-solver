@@ -59,13 +59,15 @@ class sudoku:
                     return None
                 # print(f"First line: {self.board[0, :]}, row:{row} col:{col}")
                 # print(pos)
-                # print(f"{self.board[row, :]}, row: {row}")
+                print(f"{self.board[row, :]}, row: {row}")
                 for num in pos:
                     self.board[row, col] = num
                     if self.solve() is None:
                         self.board[row, col] = 0
                     elif self.solved:
                         return self.board
+                if self.board[row, col] == 0:
+                    return None
                     # new = np.copy(self.board)s
                     # new[row, col] = num
                     # new_sudoku = sudoku(new)
@@ -85,15 +87,15 @@ def main():
 
     print("test")
     board = np.array([
-        [5, 2, 0, 0, 0, 0, 0, 8, 1],
-        [0, 3, 9, 5, 8, 0, 0, 0, 0],
-        [0, 8, 0, 0, 9, 0, 0, 0, 0],
-        [2, 4, 0, 0, 0, 0, 1, 0, 3],
-        [1, 0, 0, 4, 3, 0, 8, 6, 0],
-        [0, 6, 3, 0, 0, 7, 0, 2, 4],
-        [0, 0, 0, 1, 0, 9, 3, 5, 0],
-        [0, 0, 8, 0, 7, 4, 6, 0, 0],
-        [3, 1, 0, 8, 6, 0, 7, 0, 9]
+        [0, 0, 0, 1, 0, 0, 9, 2, 0],
+        [0, 6, 0, 9, 0, 0, 8, 0, 0],
+        [0, 1, 8, 0, 0, 2, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 7, 0, 4],
+        [0, 9, 4, 0, 3, 0, 6, 8, 0],
+        [0, 8, 5, 0, 6, 0, 0, 1, 0],
+        [1, 0, 9, 7, 0, 0, 0, 0, 0],
+        [8, 7, 6, 0, 0, 0, 3, 4, 0],
+        [5, 0, 0, 3, 0, 0, 0, 0, 0]
     ])
 
     new_board = sudoku(board)
